@@ -81,30 +81,32 @@ This is a full environment preset imitating brickadia's default environment with
   You can even edit the groundplate by adding `GroundPlate:{},` after the `Water` section
 
 ### Dynamic Variables
-  Here is the explanation of dynamic variables copied from the presets.ts:
+Here is the explanation of dynamic variables copied from the presets.ts:
   
  ------ DYNAMICVARS is an object with key names equal to env keys but each contain a high and low limit for that env setting 
  single number variables like sunScale take 2 numbers in a object, a high and a low, 
  ex. `sunScale:{hi:1.2, lo:0.5}`
 
  multi number variables like colors take a hi and low for each color, 
- ex. `fogColor: { r:{hi:0.6, lo:0.15}, g:{hi:0.5, lo:0.12}, b:{hi:1, lo:0.02}, a:{hi:0.6, lo:0.58} }`
+ ex. `fogColor: { r:{hi:0.6, lo:0.15}, g:{hi:0.5, lo:0.12}, b:{hi:1, lo:0.02}, a:{hi:1, lo:1} }`
 
 
  You can bind numbers to the same random value in dynamicVars:
  single number variables you can make the hi equal to the index (starting at 1, not 0) of the variable in dynamicVars you want to link to times 100,
   ```
    dynamicVars: {
-   sunScale: {hi:1.2, lo: 0.8}, skyIntensity:{hi:"sunScale", lo:0.2} skyIntensity will equal sunScale's random number
+   sunScale: {hi:1.2, lo: 0.8}, skyIntensity:{hi:"sunScale", lo:0.2} 
    },
   ```
+ skyIntensity will equal sunScale's random number
 
- multiple number variables the hi is equal to the name of a color before
+ in multiple number variables the hi is equal to the string name of a color before
   ```
    dynamicVars: {
-   fogColor: {r:{hi:0.6, lo:0.15}, g:{hi:0.6, lo:0.15}, b:{hi:"r", lo:0.15}, a:{hi:"r", lo:0.15}} b and a will equal r's random number
+   fogColor: {r:{hi:0.6, lo:0.15}, g:{hi:"r", lo:0.15}, b:{hi:"r", lo:0.15}, a:{hi:1, lo:1}} 
    },
   ```
+ g and b will equal r's random number
 
  There are also special options for dyn variables, all allowing you to add - on front to do the opposite number of the chosen dynvar (works best for colors or 0-1 variables)
  ex. `sunScale:{hi:"-WeatherIntensity", lo:0}` or `b:{hi:"-r". lo:0}`, if r is 0.8, b is 0.2
