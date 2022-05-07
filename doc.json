@@ -1,0 +1,93 @@
+{
+  "name": "kDynamicEnvironment",
+  "description": "A typed safe Omegga plugin.",
+  "author": "",
+  "config": 
+  {
+    "Day-Night-Cycle": 
+    {
+        "description": "Lets the plugin control the day-night cycle. May update choppy but allows more control",
+        "type": "boolean",
+        "default": true
+    },
+    "Allow-Night": 
+    {
+        "description": "If the day/night cycle allows night time, skips to morning otherwise",
+        "type": "boolean",
+        "default": true
+    },
+    "Day-Length": 
+    {
+        "description": "How long the day should take in minutes",
+        "type": "number",
+        "default": 40
+    },
+    "Night-Length": 
+    {
+        "description": "How long the day should take in minutes",
+        "type": "number",
+        "default": 20
+    },
+    "Weather-Changes-Per-Day": 
+    {
+        "description": "Average time weather switches per day+night (Day+Night = 1h, ChangesPerDay = 4, ChangeTimeVariance = 10, 1h / 4 +- 10 = 5-25m)",
+        "type": "number",
+        "default": 3
+    },
+    "Weather-Change-Time-Variance": 
+    {
+        "description": "Adds or subtracts number by time of Weather-change-per-day",
+        "type": "number",
+        "default": 10
+    },
+    "Weather-Transition-Time": 
+    {
+        "description": "Minutes for weather to complete transitioning, run faster to save cpu and network, run slower for better looking/dynamic environments",
+        "type": "number",
+        "default": 2
+    },
+    "Use-Plugin-Water": 
+    {
+        "description": "Lets plugin control water, allowing tides and flooding. Water is updated very slowly because it can cause lag when touching lots of bricks",
+        "type": "boolean",
+        "default": true
+    },
+    "Water-Default-Height": 
+    {
+        "description": "Height water will default to, 2 is 2x micro",
+        "type": "number",
+        "default": 60
+    },
+    "Water-Tide-Range": 
+    {
+        "description": "Adds and removes given number of water height during certain times of day. 0 to disable, 2 is 2x micro",
+        "type": "number",
+        "default": 24
+    },
+    "Water-Flood-Max": 
+    {
+        "description": "Max height floods can reach on top of default water height. 0 to disable, 2 is 2x micro (untested)",
+        "type": "number",
+        "default": 50
+    },
+    "Continue-Weather-Dynvar-Reroll": 
+    {
+        "description": "Some environment presets have a few dynamic variables that randomly change each weather change, but will they reroll when weather continues (untested)",
+        "type": "boolean",
+        "default": true
+    },
+    "Authorized-Users": 
+    {
+        "description": "Authorized can use more commands",
+        "type": "players",
+        "default": []
+    },
+    "Enable-Debug": 
+    {
+        "description": "Enables debug logging and info",
+        "type": "boolean",
+        "default": false
+    }
+  },
+  "commands": []
+}
