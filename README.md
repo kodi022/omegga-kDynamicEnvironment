@@ -11,7 +11,7 @@ Missing some more key features and has non functional ones still, WIP.
 
 ## Install
 
-`omegga install gh:/kDynamicEnvironment`
+`omegga install gh:Kodi022/kDynamicEnvironment`
 
 Tweak presets.ts to your liking or leave it default. There is lots of comments inside it to guide you through tweaking and there is more info in the Usage section below.
 
