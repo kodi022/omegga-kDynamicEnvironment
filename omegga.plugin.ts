@@ -14,9 +14,10 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
 
   async init() 
   {
-    const presets = envPresets;
+    const presets = envPresets.filter(p => p.enabled == true);
     const debug: boolean = this.config["Enable-Debug"];
     const auth = this.config["Authorized-Users"];
+    const enableBroadcast = this.config["Enable-Broadcasts"];
     const continueReroll = this.config["Continue-Weather-Dynvar-Reroll"];
     const toggleDayNight: boolean = this.config["Day-Night-Cycle"];
     const toggleNight: boolean = this.config["Allow-Night"];
@@ -140,7 +141,7 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
         {
           if (envName === presets[randIndex].name) 
           {
-            this.omegga.broadcast(`Continuing ${presets[randIndex].name} weather`);
+            if (enableBroadcast) this.omegga.broadcast(`Continuing ${presets[randIndex].name} weather`);
             continu = true;
           } else 
           {
@@ -148,7 +149,7 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
             bufferVars = {};
             envName = presets[randIndex].name;
             goalEnv = Object.assign(presets[randIndex].env);
-            this.omegga.broadcast(`Switching to ${presets[randIndex].name} weather`);
+            if (enableBroadcast) this.omegga.broadcast(`Switching to ${presets[randIndex].name} weather`);
           }
           break;
         } else continue;

@@ -76,6 +76,12 @@
         "type": "boolean",
         "default": true
     },
+    "Enable-Broadcasts": 
+    {
+        "description": "Broadcasts for weather changing and possible other future uses",
+        "type": "boolean",
+        "default": false
+    },
     "Authorized-Users": 
     {
         "description": "Authorized can use more commands",

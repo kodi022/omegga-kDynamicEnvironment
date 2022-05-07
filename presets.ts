@@ -78,7 +78,6 @@ import {EnvironmentPreset} from 'omegga';
 
 const envPresets:{name:string, enabled:Boolean, chance:number, time:string, dynamicVars:{}, env:EnvironmentPreset}[] =
 [
-
   {name:"Default",
   enabled: true, // THis is just the base and example env, copy and paste this one if you want to easily make a new one. 
   chance:0.02, // 0-1                 No env settings are required to be in a preset to function, you may remove what you dont need
@@ -184,7 +183,7 @@ const envPresets:{name:string, enabled:Boolean, chance:number, time:string, dyna
   // {name:"Eclipse", enabled: true, chance:0.05, time:"day", 
   // env:{data:{groups:{Sky:{sunScale: 1, skyIntensity:1, sunColor:{r:1,g:1,b:1,a:1},weatherIntensity:0}}}}},
 
-  {name:"Blackout", enabled: true, chance:0.03, time:"day", 
+  {name:"Blackout", enabled: false, chance:0.03, time:"day", 
   dynamicVars:
     {
       fogColor: {r:{hi:0.8, lo:0.66}, g:{hi:0.5, lo:0}, b:{hi:"g", lo:0},a:{hi:1, lo:1}}
