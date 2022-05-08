@@ -1,5 +1,6 @@
-import OmeggaPlugin, { OL, PS, PC, BRColor, EnvironmentPreset, _OMEGGA_UTILS_IMPORT } from 'omegga';
-import envPresets from './presets';
+import envPresets from './presets'; // if you want your own custom presets file, replace the name here to use it like './filename'
+import envPresetsCustom from './custompresets'; // if you want your own custom presets file, replace the name here to use it like './filename'
+import OmeggaPlugin, { OL, PS, PC, EnvironmentPreset, OmeggaPlayer } from 'omegga';
 type Config = { foo: string };
 type Storage = { bar: string };
 
@@ -14,22 +15,28 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
 
   async init() 
   {
-    const presets = envPresets.filter(p => p.enabled == true);
+    const startOn: boolean = this.config["Start-Enabled"]; 
     const debug: boolean = this.config["Enable-Debug"];
-    const auth = this.config["Authorized-Users"];
+    const auth: [OmeggaPlayer] = this.config["Authorized-Users"];
+    const customPresets: boolean = this.config["Use-Custom-Presets-File"];
     const enableBroadcast = this.config["Enable-Broadcasts"];
     const continueReroll = this.config["Continue-Weather-Dynvar-Reroll"];
     const toggleDayNight: boolean = this.config["Day-Night-Cycle"];
     const toggleNight: boolean = this.config["Allow-Night"];
     const dayLength: number = this.config["Day-Length"] * 240;
-    const nightLength: number = this.config["Night-Length"] * 240;
+    const nightLength: number = this.config["Night-Length"] * 240; // * 240 is useful for on tick related stuff
+    const useWeather: boolean = this.config["Use-Plugin-Weather"];
     const weatherChangeTime:number = this.config["Weather-Changes-Per-Day"];
     const weatherTimeVariance: number = this.config["Weather-Change-Time-Variance"] * 240;
-    const weatherTransitionTime: number = this.config["Weather-Transition-Time"] * 60;
+    const weatherTransitionTime: number = this.config["Weather-Transition-Time"] * 60; // * 60 is useful for 
     const useWater: boolean = this.config["Use-Plugin-Water"];
     const waterDefaultHeight = this.config["Water-Default-Height"];
     const waterTideRange = this.config["Water-Tide-Range"];
     const waterFloodMax = this.config["Water-Flood-Max"];
+
+    let presets; 
+    if (customPresets) presets = envPresetsCustom;
+    else presets = envPresets;
 
     let timeOfDay: number = 6; // 0-24
     let dayNightLength:number = (toggleNight) ? dayLength + nightLength : dayLength;
@@ -37,7 +44,7 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
     let floodAdd: number = 0;
 
     // loop variables
-    let running: boolean = true;
+    let loopInterval: number = 0;
     let lerpTick: number = 0;
     let tick: number = 0;
     let randIndex: number = 0;
@@ -47,9 +54,8 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
     // 4 tick a second, so 240 ticks a minute, 7200 ticks in 30 minutes, 14400 ticks in hour
     const Loop = () => 
     {
-      let interval = setInterval(async () => 
+      loopInterval = setInterval(async () => 
       {
-        if (!running) clearInterval(interval);
         tick++;
 
         // 4 times second update 
@@ -57,18 +63,27 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
 
         if (tick % 2 == 0) // once per 2 second // 20
         {
-          if (lerpTick < weatherTransitionTime) LerpEnv();
+          if (useWeather) 
+          {
+            if (lerpTick < weatherTransitionTime) LerpEnv();
+          }  
         }
         
         if (tick % 20 == 0) // one every 5 second update
         {
-          if (useWater && waterTideRange != 0) WaterUpdate();
-          if (waterFloodMax != 0 && curEnv.data.groups.Sky.weatherIntensity > 0.8) Flood();
+          if (useWater) 
+          {
+            if (waterTideRange != 0) WaterUpdate();
+            if (waterFloodMax != 0 && curEnv.data.groups.Sky.weatherIntensity > 0.8) Flood();
+          }
         }
 
         if (tick % Math.floor(((dayNightLength) / weatherChangeTime) + changeVariance) == 0) // Around half a day changing
         {
-          NextEnv();
+          if (useWeather) 
+          {
+            NextEnv();
+          }
         }
       }, 250)
     }
@@ -106,9 +121,11 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
 
     const LerpEnv = () => 
     {      
+      lerpTick++;
+      if (debug) this.omegga.broadcast(`Lerping ${lerpTick}`);
       let bufferKeys = Object.keys(bufferVars);
       let curGroups = curEnv.data.groups;
-      lerpTick++;
+    
       for (let group of Object.keys(curGroups)) for (let key of Object.keys(curGroups[group])) 
       {
         if (bufferKeys.find(p => p === key))
@@ -131,6 +148,7 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
 
     const NextEnv = async () => 
     {
+      if (debug) this.omegga.broadcast("Rolling for new env (NextEnv)");
       changeVariance = Math.floor((Math.random() * weatherTimeVariance) - (weatherTimeVariance / 5));
       let continu: boolean = false;
     
@@ -159,6 +177,7 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
 
     const EnvGen = () => 
     {
+      if (debug) this.omegga.broadcast("Generating new env vars (EnvGen)");
       let goalGroups = goalEnv.data.groups; // env groups of goal env
       let curGroups = curEnv.data.groups; // env groups of current env
       let dynVars = presets[randIndex].dynamicVars;
@@ -246,36 +265,78 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
       }
     }
 
-    function DynVar(range:{hi:number, lo:number}, goal: number, current: number) 
+    function DynVar(range:{hi:number, lo:number}, goal: number, current: number) // just generate a normal dynvar
     {
       goal = RandomRange(range.hi, range.lo);
       return (goal - current) / weatherTransitionTime;
     }
-    function DynVarLink(goal: number, current: number) 
+    function DynVarLink(goal: number, current: number) // when a variable is linked to another variable
     {
       return (goal - current) / weatherTransitionTime;
     }
-    function DynVarLinkReverse(goal: number, current: number) 
+    function DynVarLinkAdd(goal: number, current: number, add: boolean, addNum: number) // as above but offsetting a set amount
+    {
+      if (add) 
+      {
+        return ((goal - current) / weatherTransitionTime) + addNum;
+      } else 
+      {
+        return ((goal - current) / weatherTransitionTime) - addNum;
+      }
+      
+    }
+    function DynVarLinkReverse(goal: number, current: number) // 
     {
       let goalReversed = 1 - goal; // yea it only works with colors mostly, im lazy
       return (goalReversed - current) / weatherTransitionTime;
     }
 
-    const SunAngle = () => 
+    const SunAngle = () => // possible future feature
     {
 
     }
 
 
-    this.omegga.on('cmd:env', (name:string) => 
+    this.omegga.on('cmd:env', (name: string, value1: string) => 
     {
-      if (debug) 
+      if (auth.find(p => p.name === name)) 
       {
-        console.log(curEnv.data.groups.Sky);
-        this.omegga.whisper(name, "Printed some debug to console");
-      } else 
+        switch (value1) 
+        {
+          case "start": 
+          {
+            clearInterval(loopInterval);
+            Loop();
+            this.omegga.whisper(name, "Starting dynamic env...");
+            break;
+          }
+          case "stop": 
+          {
+            clearInterval(loopInterval);
+            this.omegga.whisper(name, "Stopping dynamic env...");
+            break;
+          }
+          case "debug": 
+          {
+            console.log(curEnv.data.groups.Sky);
+            this.omegga.whisper(name, "Printed some of current Env to console");
+          }
+          default: 
+          {
+            this.omegga.whisper(name, "Available options for <code>/env option</> are");
+            this.omegga.whisper(name, "start, stop, debug");
+          }
+        }
+      } else
       {
-        this.omegga.whisper(name, "Debug not enabled");
+        switch (value1) 
+        {
+          default: 
+          {
+            this.omegga.whisper(name, "No commands are available to you.");
+            //this.omegga.whisper(name, "start, stop, debug");
+          }
+        }
       }
     })
     
@@ -293,7 +354,7 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
       console.error(str);
     }
 
-    Loop(); 
+    if (startOn) Loop(); 
     return { registeredCommands: ['env'] };
   }
   async stop() {}

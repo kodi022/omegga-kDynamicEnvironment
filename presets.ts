@@ -74,8 +74,18 @@ import {EnvironmentPreset} from 'omegga';
   // fogColor 0-1, 0-1, 0-1, 0-1
 
   // ALLOWED RANGES FOR WATER VARIABLES
+  // waterAbsorption 0-0.25, 0-0.25, 0-0.25
+  // waterScattering 0-0.25, 0-0.25, 0-0.25
+  // waterFogIntensity: 0-0.03
+  // waterFogAmbientColor: 0-1, 0-1, 0-1, 0-1
+  // waterFogAmbientScale: 0-4
+  // waterFogScatteringColor: 0-1, 0-1, 0-1, 0-1
+  // waterFogScatteringScale: 0-4
+
+  // ALLOWED RANGES FOR GROUND PLATE
   // wip
 
+  // Leave all 'a' as 1 because they make weird results when changed
 const envPresets:{name:string, enabled:Boolean, chance:number, time:string, dynamicVars:{}, env:EnvironmentPreset}[] =
 [
   {name:"Default",
@@ -158,7 +168,7 @@ const envPresets:{name:string, enabled:Boolean, chance:number, time:string, dyna
     {
       sunScale: 0.85, sunlightColor:{r:1,g:1,b:1,a:0.3}, skyIntensity:1, skyColor:{r:0.2,g:0.2,b:0.4,a:1}, 
       weatherIntensity:0.5, rainSnow:0, cloudCoverage: 0.3, cloudSpeedMultiplier: 1, precipitationParticleAmount: 1, rainVolume: 0.6, windVolume: 0,
-      clearFogDensity:0.165,  cloudyFogDensity: 0.4, fogColor:{r:0.503,g:0.68,b:1,a:0.2}, moonlightIntensity: 1.5, moonScale: 1.2
+      clearFogDensity:0.165,  cloudyFogDensity: 0.4, cloudyFogHeightFalloff: 0.1, fogColor:{r:0.503,g:0.68,b:1,a:0.2}, moonlightIntensity: 1.5, moonScale: 1.2
     },
   }}}},
   

@@ -80,6 +80,8 @@ This is a full environment preset imitating brickadia's default environment with
   ```
   You can even edit the groundplate by adding `GroundPlate:{},` after the `Water` section
 
+  Try not to mess with the 'a' in color variables, leave it as 1. It produces strange color behavior when changed
+
 ### Dynamic Variables
 Here is the explanation of dynamic variables copied from the presets.ts:
   
