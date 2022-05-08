@@ -1,5 +1,5 @@
 import envPresets from './presets'; // if you want your own custom presets file, replace the name here to use it like './filename'
-import envPresetsCustom from './custompresets'; // if you want your own custom presets file, replace the name here to use it like './filename'
+//import envPresetsCustom from './custompresets'; // if you want your own custom presets file, replace the name here to use it like './filename'
 import OmeggaPlugin, { OL, PS, PC, EnvironmentPreset, OmeggaPlayer } from 'omegga';
 type Config = { foo: string };
 type Storage = { bar: string };
@@ -34,9 +34,9 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
     const waterTideRange = this.config["Water-Tide-Range"];
     const waterFloodMax = this.config["Water-Flood-Max"];
 
-    let presets; 
-    if (customPresets) presets = envPresetsCustom;
-    else presets = envPresets;
+    let presets = envPresets; 
+    // if (customPresets) presets = envPresetsCustom;
+    // else presets = envPresets;
 
     let timeOfDay: number = 6; // 0-24
     let dayNightLength:number = (toggleNight) ? dayLength + nightLength : dayLength;
