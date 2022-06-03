@@ -10,27 +10,15 @@
         "type": "boolean",
         "default": true
     },
-    "Day-Night-Cycle": 
-    {
-        "description": "Lets the plugin control the day-night cycle. May update choppy compared to vanilla but allows more control",
-        "type": "boolean",
-        "default": true
-    },
     "Day-Length": 
     {
-        "description": "How long the day should take in minutes",
+        "description": "How long the day should take in minutes, 0 disables daynight cycle",
         "type": "number",
         "default": 40
     },
-    "Allow-Night": 
-    {
-        "description": "If the day/night cycle allows night time, skips to morning otherwise",
-        "type": "boolean",
-        "default": true
-    },
     "Night-Length": 
     {
-        "description": "How long the night should take in minutes",
+        "description": "How long the night should take in minutes, 0 disables it and skips to morning, does nothing if day length is 0",
         "type": "number",
         "default": 20
     },
@@ -42,7 +30,7 @@
     },
     "Weather-Changes-Per-Day": 
     {
-        "description": "Average time weather switches per day+night (Day+Night = 1h, ChangesPerDay = 4, ChangeTimeVariance = 10, 1h / 4 +- 10 = 5-25m)",
+        "description": "Average time weather switches per day+night (Day+Night = 1h, ChangesPerDay = 4, ChangeTimeVariance = 10, 1h / 4 +- 10 = 5-25m) Defaults to 40 if day/night cycle is disabled.",
         "type": "number",
         "default": 3
     },
@@ -84,19 +72,13 @@
     },
     "Continue-Weather-Dynvar-Reroll": 
     {
-        "description": "Some environment presets have a few dynamic variables that randomly change each weather change, but will they reroll when weather continues (untested)",
+        "description": "Some environment presets have a few dynamic variables that randomly change each weather change, but will they reroll when weather continues",
         "type": "boolean",
         "default": true
     },
     "Enable-Broadcasts": 
     {
         "description": "Broadcasts for weather changing and possible other future uses",
-        "type": "boolean",
-        "default": false
-    },
-    "Use-Custom-Presets-File": 
-    {
-        "description": "If custom presets file is chose, which disables the use of the default one",
         "type": "boolean",
         "default": false
     },
@@ -108,7 +90,7 @@
     },
     "Enable-Debug": 
     {
-        "description": "Enables debug logging and info",
+        "description": "Enables debug broadcasts and commands",
         "type": "boolean",
         "default": false
     }

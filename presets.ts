@@ -88,9 +88,9 @@ import {EnvironmentPreset} from 'omegga';
   // Leave all 'a' as 1 because they make weird results when changed
 const envPresets:{name:string, enabled:Boolean, chance:number, time:string, dynamicVars:{}, env:EnvironmentPreset}[] =
 [
-  {name:"Default",
+  {name:"Default", // this is identical to the default weather of brickadia
   enabled: true, // THis is just the base and example env, copy and paste this one if you want to easily make a new one. 
-  chance:0.02, // 0-1                 No env settings are required to be in a preset to function, you may remove what you dont need
+  chance:0.02, // 0-1           No env settings are required to be in a preset to function, you may remove what you dont need
   time:"day", 
   dynamicVars: // vars in dynamicvars do need the variable to be in env too though
   { 
@@ -111,18 +111,18 @@ const envPresets:{name:string, enabled:Boolean, chance:number, time:string, dyna
       starsIntensity: 1,
       starsColor: {r:0.749,g:0.851,b:1,a:1}, 
       auroraIntensity: 0,
-      weatherIntensity: 0, 
-      rainSnow: 0, 
-      cloudCoverage: 0.38, 
-      cloudSpeedMultiplier: 1, 
-      precipitationParticleAmount: 1, 
+      weatherIntensity: 0,
+      rainSnow: 0,
+      cloudCoverage: 0.38,
+      cloudSpeedMultiplier: 1,
+      precipitationParticleAmount: 1,
       bCloseLightning: true,
       rainVolume: 0.65,
       closeThunderVolume: 1,
       distantThunderVolume: 0.4,
       windVolume: 0.65,
-      clearFogDensity: 0.01,  
-      cloudyFogDensity: 0.25, 
+      clearFogDensity: 0.01,
+      cloudyFogDensity: 0.25,
       clearFogHeightFalloff: 0.09,
       cloudyFogHeightFalloff: 0.04,
       fogColor: {r:0.503,g:0.68,b:1,a:1},
